@@ -21,7 +21,7 @@ RUN apt-get update
 RUN apt-get install wget -y
 # download IDE to the /ide dir:
 WORKDIR /download
-ARG downloadUrl
+ARG downloadUrl=https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2020.3.1.14/android-studio-2020.3.1.14-linux.tar.gz
 RUN wget -q $downloadUrl -O - | tar -xz
 RUN find . -maxdepth 1 -type d -name * -execdir mv {} /ide \;
 
@@ -30,7 +30,8 @@ FROM amazoncorretto:11 as projectorGradleBuilder
 ENV PROJECTOR_DIR /projector
 
 # projector-server:
-ADD projector-server $PROJECTOR_DIR/projector-server
+
+RUN git clone https://github.com/JetBrains/projector-server.git $PROJECTOR_DIR/projector-server
 WORKDIR $PROJECTOR_DIR/projector-server
 ARG buildGradle
 RUN if [ "$buildGradle" = "true" ]; then ./gradlew clean; else echo "Skipping gradle build"; fi
@@ -44,6 +45,7 @@ RUN apt-get install unzip -y
 # create the Projector dir:
 ENV PROJECTOR_DIR /projector
 RUN mkdir -p $PROJECTOR_DIR
+VOLUME PROJECTOR_DIR
 # copy IDE:
 COPY --from=ideDownloader /ide $PROJECTOR_DIR/ide
 # copy projector files to the container:
@@ -114,5 +116,10 @@ RUN true \
 
 USER $PROJECTOR_USER_NAME
 ENV HOME /home/$PROJECTOR_USER_NAME
+
+RUN cd $HOME && mkdir repo
+VOLUME repo
+RUN cd -
+
 
 CMD ["bash", "-c", "/run.sh"]

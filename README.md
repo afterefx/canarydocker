@@ -9,27 +9,18 @@ Some scripts to create and run a Docker container with Projector and JetBrains I
 
 ## Run JetBrains IDE in Docker
 
-How to run JetBrains IDE in Docker and access it via a web browser?
+How to run Android Studio Canary 14 in Docker and access it via a web browser?
 
 Firstly, pull an image with needed IDE:
 
 ```shell
-docker pull registry.jetbrains.team/p/prj/containers/projector-clion
-docker pull registry.jetbrains.team/p/prj/containers/projector-datagrip
-docker pull registry.jetbrains.team/p/prj/containers/projector-goland
-docker pull registry.jetbrains.team/p/prj/containers/projector-idea-c
-docker pull registry.jetbrains.team/p/prj/containers/projector-idea-u
-docker pull registry.jetbrains.team/p/prj/containers/projector-phpstorm
-docker pull registry.jetbrains.team/p/prj/containers/projector-pycharm-c
-docker pull registry.jetbrains.team/p/prj/containers/projector-pycharm-p
-docker pull registry.jetbrains.team/p/prj/containers/projector-webstorm
+docker pull hub.docker.com/carlic578/android_studio_canary_docker
 ```
 
-After that, you can run it via the following command (just replace `IMAGE_NAME` with the needed name, for
-example, `registry.jetbrains.team/p/prj/containers/projector-clion`):
+After that, you can run it via the following command: 
 
 ```shell
-docker run --rm -p 8887:8887 -it IMAGE_NAME
+docker run --rm -p 8887:8887 -it carlic578/android_studio_canary_docker:latest
 ```
 
 This will run **Projector Server with the selected JetBrains IDE** locally.

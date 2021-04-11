@@ -31,15 +31,16 @@ for i in "${!ideRunnerCandidates[@]}"; do
     fi
 done
 
-if [[ ${#ideRunnerCandidates[@]} != 1 ]]; then
-    echo "Can't find a single candidate to be IDE runner script so can't select a single one:"
-    echo ${ideRunnerCandidates[*]}
-    exit 1
-fi
+#if [[ ${#ideRunnerCandidates[@]} != 1 ]]; then
+#    echo "Can't find a single candidate to be IDE runner script so can't select a single one:"
+#    echo ${ideRunnerCandidates[*]}
+#    exit 1
+#fi
 
 ideRunnerCandidate=${ideRunnerCandidates[@]}
 ideRunnerWithoutPrefix=${ideRunnerCandidate/"./"/""}
-IDE_RUN_FILE_NAME=${ideRunnerWithoutPrefix/".sh"/""}
+#IDE_RUN_FILE_NAME=${ideRunnerWithoutPrefix/".sh"/""}
+IDE_RUN_FILE_NAME=studio
 echo "Found IDE: $IDE_RUN_FILE_NAME"
 
 cp "$IDE_RUN_FILE_NAME.sh" "$IDE_RUN_FILE_NAME-projector.sh"
