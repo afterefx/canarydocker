@@ -25,13 +25,6 @@ ARG downloadUrl=https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2020.
 RUN wget -q $downloadUrl -O - | tar -xz
 RUN find . -maxdepth 1 -type d -name * -execdir mv {} /ide \;
 
-FROM debian AS projectorGit
-# prepare tools:
-RUN apt-get update
-RUN apt-get install unzip -y
-ENV PROJECTOR_DIR /projector
-RUN git clone https://github.com/JetBrains/projector-server.git $PROJECTOR_DIR/projector-server
-
 FROM amazoncorretto:11 as projectorGradleBuilder
 
 ENV PROJECTOR_DIR /projector
