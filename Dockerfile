@@ -25,12 +25,35 @@ ARG downloadUrl=https://redirector.gvt1.com/edgedl/android/studio/ide-zips/2020.
 RUN wget -q $downloadUrl -O - | tar -xz
 RUN find . -maxdepth 1 -type d -name * -execdir mv {} /ide \;
 
+# grab copy of projector-server
+FROM debian:10 as serverGitClone
+
+RUN true \
+# Any command which returns non-zero exit code will cause this shell script to exit immediately:
+   && set -e \
+# Activate debugging to show execution details: all commands will be printed before execution
+   && set -x \
+# install packages:
+    && apt-get update \
+# packages for awt:
+    && apt-get install libxext6 libxrender1 libxtst6 libxi6 libfreetype6 -y \
+# packages for user convenience:
+    && apt-get install git vim ssh bash-completion -y \
+# packages for IDEA (to disable warnings):
+    && apt-get install procps -y \
+# clean apt to reduce image size:
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /var/cache/apt
+
+RUN git clone https://github.com/JetBrains/projector-server.git projector-server
+
 FROM amazoncorretto:11 as projectorGradleBuilder
 
 ENV PROJECTOR_DIR /projector
 
 # projector-server:
-ADD projector-server $PROJECTOR_DIR/projector-server
+#ADD projector-server $PROJECTOR_DIR/projector-server
+COPY --from=serverGitClone /projector-server $PROJECTOR_DIR/projector-server
 WORKDIR $PROJECTOR_DIR/projector-server
 ARG buildGradle
 RUN ./gradlew clean
@@ -70,7 +93,7 @@ RUN true \
 # packages for awt:
     && apt-get install libxext6 libxrender1 libxtst6 libxi6 libfreetype6 -y \
 # packages for user convenience:
-    && apt-get install git bash-completion -y \
+    && apt-get install git vim ssh bash-completion -y \
 # packages for IDEA (to disable warnings):
     && apt-get install procps -y \
 # clean apt to reduce image size:
@@ -115,10 +138,5 @@ RUN true \
 
 USER $PROJECTOR_USER_NAME
 ENV HOME /home/$PROJECTOR_USER_NAME
-
-RUN cd $HOME && mkdir repo
-VOLUME repo
-RUN cd -
-
 
 CMD ["bash", "-c", "/run.sh"]
