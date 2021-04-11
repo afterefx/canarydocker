@@ -1,0 +1,62 @@
+<!--
+  ~ Copyright (c) 2019-2021, JetBrains s.r.o. and/or its affiliates. All rights reserved.
+  ~ DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
+  ~
+  ~ This code is free software; you can redistribute it and/or modify it
+  ~ under the terms of the GNU General Public License version 2 only, as
+  ~ published by the Free Software Foundation. JetBrains designates this
+  ~ particular file as subject to the "Classpath" exception as provided
+  ~ by Oracle in the LICENSE file that accompanied this code.
+  ~
+  ~ This code is distributed in the hope that it will be useful, but WITHOUT
+  ~ ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+  ~ FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+  ~ version 2 for more details (a copy is included in the LICENSE file that
+  ~ accompanied this code).
+  ~
+  ~ You should have received a copy of the GNU General Public License version
+  ~ 2 along with this work; if not, write to the Free Software Foundation,
+  ~ Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+  ~
+  ~ Please contact JetBrains, Na Hrebenech II 1718/10, Prague, 14000, Czech Republic
+  ~ if you need additional information or have any questions.
+  -->
+<idea-plugin>
+  <id>org.jetbrains.projector-plugin</id>
+  <name>Projector</name>
+  <vendor email="support@jetbrains.org" url="https://www.jetbrains.org">JetBrains</vendor>
+
+  <idea-version since-build="193"/>
+
+  <description><![CDATA[
+    <p>Share the IDE window using the <a href="https://github.com/JetBrains/projector-server">Projector server</a>.</p>
+    <br/>
+    <p>How to use: after the plugin installation, please manually restart the IDE. New menu item <strong>Projector</strong> will appear next to the <strong>Help</strong> in the title bar.</p>
+    <br/>
+    <p>If you want simultaneous collaborative editing, please try <a href="https://www.jetbrains.com/help/idea/code-with-me.html">Code With Me</a> solution. Projector doesn't support that.</p>
+  ]]></description>
+
+  <change-notes><![CDATA[
+    Changelog is available in <a href="https://github.com/JetBrains/projector-server/blob/master/projector-plugin/CHANGELOG.md">CHANGELOG.md</a>.
+  ]]></change-notes>
+
+  <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+       on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceImplementation="ProjectorService"/>
+    <postStartupActivity implementation="RegisterPluginInstallerStateListener"/>
+  </extensions>
+
+  <actions>
+    <group id="projector.menu" text="Projector" description="Projector menu">
+      <add-to-group group-id="MainMenu" anchor="last"/>
+      <action id="projector.enable" class="EnableAction" text="Start Remote Access to IDE" description="Enable projector"/>
+      <action id="projector.disable" class="DisableAction" text="Stop Remote Access to IDE" description="Disable projector"/>
+      <action id="projector.session" class="SessionAction" text="Current Session" description="Current session parameters"/>
+      <action id="projector.activate" class="ActivateAction" text="Activate Remote Access to IDE (First Time Setup)"
+              description="Activate projector"/>
+    </group>
+  </actions>
+</idea-plugin>
